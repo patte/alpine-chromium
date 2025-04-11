@@ -1,0 +1,5 @@
+#!/usr/bin/execlineb -P
+with-contenv
+s6-setuidgid chrome
+
+socat TCP4-LISTEN:9222,fork TCP4:127.0.0.1:9223
