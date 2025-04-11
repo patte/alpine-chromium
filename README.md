@@ -1,19 +1,20 @@
 # alpine-chromium
 
-Run headless chromium in a minimal alpine container (~750MB)
+Run headless chromium in a minimal alpine container.
 
 Features:
-- [x] alpine 3.21
-- [x] chromium 135+
+- [x] alpine 3.21, chromium 135+
+- [x] Small image size: ~310MB 
 - [x] Fonts: `font-noto`, `font-noto-emoji`, `font-wqy-zenhei`, `ttf-freefont`
 - [x] Works without `--no-sandbox`
 - [x] socat to access debug port (because chromium removed `remote-debugging-address=0.0.0.0`)
 - [x] s6-overlay to manage chromium and socat processes
-- [x] GitHub Action to build (weekly) and push the image to ghcr.io
+- [x] GitHub action to build (weekly) and push the image to ghcr.io
+- [x] Images for `linux/amd64` and `linux/arm64`
 
 Image:
 ```
-ghcr.io/patte/alpine-chromium:main
+ghcr.io/patte/alpine-chromium
 ```
 
 ## Usage
@@ -38,7 +39,7 @@ services:
 ```
 
 ### Overwriting default chrome args
-The `Dockerfile` sets default args for chromium in `CHROMIUM_ARGS`. You can overwrite them by setting the `CHROMIUM_ARGS` environment variable in your `docker-compose.yml` file. Make sure to keep at least: `--headless --remote-debugging-port=9223 --disable-crash-reporter --no-crashpad`.
+The `Dockerfile` sets default args for chromium in [`CHROMIUM_ARGS`](./Dockerfile#L35). You can overwrite them by setting the `CHROMIUM_ARGS` environment variable in your `docker-compose.yml` file. Make sure to keep at least: `--headless --remote-debugging-port=9223 --disable-crash-reporter --no-crashpad`.
 
 Eg. without `security_opt` but `--no-sandbox`:
 ```yaml
