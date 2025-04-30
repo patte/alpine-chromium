@@ -68,11 +68,47 @@ const chromeVersion = await fetch('http://localhost:9222/json/version').then((re
     throw new Error(`Can't connect to Chrome: ${res.statusText}`);
   }
   return res.json();
+}).catch((e) => {
+  console.error('Failed to fetch chrome version', e);
+  throw new Error(`Failed to fetch chrome version`);
 });
 
 const browser = await puppeteer.connect({
   browserWSEndpoint: chromeVersion.webSocketDebuggerUrl,
 });
+```
+
+#### Hostname
+Chrome's remote debugging only accepts connections with the host header set to `localhost` or an IP address ([source](https://github.com/puppeteer/puppeteer/issues/2242)). To use a different hostname, resolve it to an IP address first, e.g.:
+```ts
+async function connectToChrome() {
+	const chromeHost = env.NODE_ENV === 'production' ? 'systemd-chrome' : 'localhost';
+
+	// resolve hostname to ip, otherwise chrome responds with:
+	// "Host header is specified and is not an IP address or localhost."
+	const { address: hostname } = await dns.lookup(chromeHost, 4).catch((e) => {
+		console.error('Failed to resolve chrome host', e);
+		throw new Error(`Failed to resolve chrome host`);
+	});
+
+	const chromeVersion = await fetch(`http://${hostname}:9222/json/version`)
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error(`Can't connect to Chrome: ${res.statusText}`);
+			}
+			return res.json();
+		})
+		.catch((e) => {
+			console.error('Failed to fetch chrome version', e);
+			throw new Error(`Failed to fetch chrome version`);
+		});
+
+	const browser = await puppeteer.connect({
+		browserWSEndpoint: chromeVersion.webSocketDebuggerUrl,
+	});
+
+	return browser;
+}
 ```
 
 ## Build
