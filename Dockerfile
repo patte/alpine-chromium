@@ -2,7 +2,7 @@ FROM alpine:3.22
 
 RUN apk upgrade --no-cache --available \
   && apk add --no-cache \
-  chromium-swiftshader \
+  chromium \
   ttf-freefont \
   font-noto \
   font-noto-emoji \
