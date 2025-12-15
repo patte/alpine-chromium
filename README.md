@@ -1,5 +1,7 @@
 # alpine-chromium
 
+<a href="https://github.com/patte/alpine-chromium/actions"><img src="https://github.com/patte/alpine-chromium/actions/workflows/docker-publish.yml/badge.svg?branch=main" alt="Test and publish" height="18"></a>
+
 Run headless chromium in a minimal alpine container.
 This is a fork of [jlandure/alpine-chrome](https://github.com/jlandure/alpine-chrome) adapted to new alpine and chrome versions plus some fonts.
 
@@ -116,6 +118,13 @@ To manually build the image, run the following command:
 ```bash
 docker build -t localhost/alpine-chromium .
 ```
+
+## Test
+Run the same test that CI executes by calling [scripts/test.sh](scripts/test.sh):
+```bash
+./scripts/test.sh
+```
+The script builds the image, starts the container with the seccomp profile, waits for `localhost:9222/json/version` to respond (confirming socat exposes Chromium's debug port), opens `https://example.com` through the `/json/new` endpoint and checks if `<html` is in the response. Customize it by exporting `IMAGE_NAME`, `HOST_PORT`, or `SKIP_BUILD=1` if you already built the image.
 
 ## Credits
 Inspired by:
