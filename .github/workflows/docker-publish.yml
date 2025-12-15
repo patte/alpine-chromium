@@ -5,6 +5,8 @@ on:
     branches: ["main"]
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
+  # run on pull requests, but do not publish
+  pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   # Run every sunday at 23:00
@@ -41,6 +43,13 @@ jobs:
         uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad #v4.0.0
         with:
           cosign-release: "v2.6.1"
+
+      # Set up QEMU: avoid build error on alpine 3.23
+      # https://github.com/patte/alpine-chromium/actions/runs/20246026669/job/58126239415
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
