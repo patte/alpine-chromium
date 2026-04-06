@@ -1,2 +1,5 @@
 #!/bin/sh
+# Clean up orphaned chromium temp directories to prevent disk space leaks.
+# Each crash-restart cycle creates a new scoped_dir (~4.6MB) in /tmp/.
+rm -rf /tmp/org.chromium.Chromium.*
 exit 0
