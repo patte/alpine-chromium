@@ -6,7 +6,7 @@ Run headless chromium in a minimal alpine container.
 This is a fork of [jlandure/alpine-chrome](https://github.com/jlandure/alpine-chrome) adapted to new alpine and chrome versions plus some fonts.
 
 Features:
-- [x] alpine 3.23, chromium 143+
+- [x] alpine 3.24, chromium 150+
 - [x] Image size: ~770MB 
 - [x] Fonts: `font-noto`, `font-noto-emoji`, `font-wqy-zenhei`, `ttf-freefont`
 - [x] Works with or without `--no-sandbox` thanks to a seccomp profile 
