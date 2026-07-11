@@ -7,7 +7,7 @@ This is a fork of [jlandure/alpine-chrome](https://github.com/jlandure/alpine-ch
 
 Features:
 - [x] alpine 3.24, chromium 150+
-- [x] Image size: ~770MB 
+- [x] Image size: ~750MB 
 - [x] Fonts: `font-noto`, `font-noto-emoji`, `font-wqy-zenhei`, `ttf-freefont`
 - [x] Works with or without `--no-sandbox` thanks to a seccomp profile 
 - [x] socat to access debug port (because chromium removed `remote-debugging-address=0.0.0.0`)
