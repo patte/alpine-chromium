@@ -143,7 +143,7 @@ if [ "$UPDATE_GOLDEN" = "1" ]; then
   echo "📸 Golden image updated: $GOLDEN_FILE"
 fi
 
-# ImageMagick 7 (magick compare) or 6 (compare); preinstalled on GitHub runners
+# ImageMagick 7 (magick compare) or 6 (compare); required in CI for the golden image comparison
 compare_cmd=""
 if command -v magick >/dev/null 2>&1; then
   compare_cmd="magick compare"
