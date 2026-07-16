@@ -8,7 +8,7 @@ This is a fork of [jlandure/alpine-chrome](https://github.com/jlandure/alpine-ch
 Features:
 - [x] alpine 3.24, chromium 150+
 - [x] Image size: ~800MB 
-- [x] Fonts: `font-noto`, `font-noto-emoji`, `font-wqy-zenhei`, `ttf-freefont`
+- [x] Fonts: `font-noto`, `font-noto-emoji`, `font-wqy-zenhei`, `ttf-freefont` — the generic families (`sans-serif`, `serif`, `monospace`) resolve to Noto; WenQuanYi serves CJK via fallback
 - [x] Works with or without `--no-sandbox` thanks to a seccomp profile 
 - [x] socat to access debug port (because chromium removed `remote-debugging-address=0.0.0.0`)
 - [x] s6-overlay to manage chromium and socat processes
