@@ -125,7 +125,12 @@ Run the same test that CI executes by calling [scripts/test.sh](scripts/test.sh)
 ```bash
 ./scripts/test.sh
 ```
-The script builds the image, starts the container with the seccomp profile, waits for `localhost:9222/json/version` to respond (confirming socat exposes Chromium's debug port), opens `https://example.com` through the `/json/new` endpoint, renders a page to a screenshot inside the container, and fails on fatal GPU/sandbox errors in the container logs (Chromium can fall back to software compositing and look alive while its GPU process is broken). It then repeats the startup and log check with `--disable-gpu` args. Customize it by exporting `IMAGE_NAME`, `HOST_PORT`, or `SKIP_BUILD=1` if you already built the image.
+The script builds the image, starts the container with the seccomp profile, waits for `localhost:9222/json/version` to respond (confirming socat exposes Chromium's debug port), opens `https://example.com` through the `/json/new` endpoint, renders a test page (latin text, color emoji, CJK) to a screenshot inside the container and compares it against [scripts/test-golden.png](scripts/test-golden.png) (RMSE via ImageMagick, skipped if not installed), and fails on fatal GPU/sandbox errors in the container logs (Chromium can fall back to software compositing and look alive while its GPU process is broken). It then repeats the startup and log check with `--disable-gpu` args. Customize it by exporting `IMAGE_NAME`, `HOST_PORT`, or `SKIP_BUILD=1` if you already built the image.
+
+If a chromium or font update legitimately changes rendering, regenerate the golden image with:
+```bash
+UPDATE_GOLDEN=1 ./scripts/test.sh
+```
 
 ## Credits
 Inspired by:

@@ -9,6 +9,17 @@ HOST_PORT="${HOST_PORT:-9222}"
 WAIT_SECONDS="${WAIT_SECONDS:-90}"
 TARGET_URL="${TARGET_URL:-https://example.com}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
+UPDATE_GOLDEN="${UPDATE_GOLDEN:-0}"
+
+GOLDEN_FILE="$ROOT_DIR/scripts/test-golden.png"
+# Normalized RMSE above which the screenshot is considered broken. Font or
+# chromium updates cause small drift (~0.01-0.05); a blank or garbled page
+# is far above. Regenerate the golden with UPDATE_GOLDEN=1 ./scripts/test.sh
+GOLDEN_MAX_RMSE="${GOLDEN_MAX_RMSE:-0.10}"
+# Exercises the raster path plus the bundled fonts: latin in sans, serif
+# and monospace, color emoji (font-noto-emoji) and CJK (font-wqy-zenhei /
+# font-noto).
+RENDER_PAGE='data:text/html;charset=utf-8,<body style="margin:0;background:%237c3aed;color:%23fff;font-family:sans-serif"><h1 style="font-size:44px;margin:40px">Hello from alpine-chromium 🎉</h1><p style="font-size:34px;margin:40px">你好，世界 — <span style="font-family:serif">fonts</span>, emoji %26 <span style="font-family:monospace">pixels</span> OK</p></body>'
 
 demand() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -112,17 +123,54 @@ if ! docker exec --user chrome "$CONTAINER_NAME" chromium-browser \
   --user-data-dir=/tmp/test-profile \
   --screenshot=/tmp/test-shot.png \
   --window-size=800,600 \
-  "data:text/html,<h1>render test</h1>" >"$shot_log" 2>&1; then
+  "$RENDER_PAGE" >"$shot_log" 2>&1; then
   echo "❌ Screenshot run failed:" >&2
   tail -20 "$shot_log" >&2
   exit 1
 fi
-shot_size=$(docker exec "$CONTAINER_NAME" stat -c %s /tmp/test-shot.png || echo 0)
-if [ "$shot_size" -lt 1000 ]; then
-  echo "❌ Screenshot missing or implausibly small (${shot_size} bytes)" >&2
+shot_file="$(mktemp)"
+docker cp "$CONTAINER_NAME:/tmp/test-shot.png" "$shot_file" >/dev/null
+shot_size=$(wc -c <"$shot_file" | tr -d ' ')
+magic=$(od -An -tx1 -N4 "$shot_file" | tr -d ' \n')
+if [ "$magic" != "89504e47" ] || [ "$shot_size" -lt 10000 ]; then
+  echo "❌ Screenshot is not a plausible PNG (${shot_size} bytes, magic $magic)" >&2
   exit 1
 fi
 echo "✅ Chromium rendered a screenshot (${shot_size} bytes)"
+
+if [ "$UPDATE_GOLDEN" = "1" ]; then
+  cp "$shot_file" "$GOLDEN_FILE"
+  echo "📸 Golden image updated: $GOLDEN_FILE"
+fi
+
+# ImageMagick 7 (magick compare) or 6 (compare); preinstalled on GitHub runners
+compare_cmd=""
+if command -v magick >/dev/null 2>&1; then
+  compare_cmd="magick compare"
+elif command -v compare >/dev/null 2>&1; then
+  compare_cmd="compare"
+fi
+if [ -z "$compare_cmd" ]; then
+  if [ -n "${CI:-}" ]; then
+    echo "❌ ImageMagick is required in CI for the golden image comparison" >&2
+    exit 1
+  fi
+  echo "⚠️ ImageMagick not found, skipping golden image comparison"
+else
+  echo "Comparing screenshot against golden image..."
+  rmse_out=$($compare_cmd -metric RMSE "$GOLDEN_FILE" "$shot_file" null: 2>&1 || true)
+  rmse=$(echo "$rmse_out" | sed -n 's/.*(\([0-9.eE-]*\)).*/\1/p')
+  if [ -z "$rmse" ]; then
+    echo "❌ Golden comparison failed to produce a metric: $rmse_out" >&2
+    exit 1
+  fi
+  if ! awk -v r="$rmse" -v max="$GOLDEN_MAX_RMSE" 'BEGIN{exit !(r<=max)}'; then
+    echo "❌ Screenshot deviates from golden image: RMSE $rmse > $GOLDEN_MAX_RMSE" >&2
+    echo "If the change is legitimate (e.g. chromium/font update), regenerate with UPDATE_GOLDEN=1 ./scripts/test.sh" >&2
+    exit 1
+  fi
+  echo "✅ Screenshot matches golden image (RMSE $rmse <= $GOLDEN_MAX_RMSE)"
+fi
 
 check_fatal_logs
 
