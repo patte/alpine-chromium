@@ -37,6 +37,11 @@
 			"args": null
 		},
 		{
+			"name": "cachestat",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "capget",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
@@ -92,12 +97,27 @@
 			"args": null
 		},
 		{
+			"name": "clone3",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "close",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
 		{
+			"name": "close_range",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "connect",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "copy_file_range",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
@@ -147,6 +167,11 @@
 			"args": null
 		},
 		{
+			"name": "epoll_pwait2",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "epoll_wait",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
@@ -192,6 +217,11 @@
 			"args": null
 		},
 		{
+			"name": "faccessat2",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "fadvise64",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
@@ -228,6 +258,11 @@
 		},
 		{
 			"name": "fchmodat",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "fchmodat2",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
@@ -333,6 +368,26 @@
 		},
 		{
 			"name": "futex",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "futex_requeue",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "futex_wait",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "futex_waitv",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "futex_wake",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
@@ -662,6 +717,16 @@
 			"args": null
 		},
 		{
+			"name": "map_shadow_stack",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "membarrier",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
 			"name": "memfd_create",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
@@ -693,6 +758,11 @@
 		},
 		{
 			"name": "mlock",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "mlock2",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
@@ -828,6 +898,51 @@
 		},
 		{
 			"name": "openat2",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pidfd_open",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pidfd_send_signal",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pkey_alloc",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pkey_free",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pkey_mprotect",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "preadv2",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "process_mrelease",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "pwritev2",
+			"action": "SCMP_ACT_ALLOW",
+			"args": null
+		},
+		{
+			"name": "rseq",
 			"action": "SCMP_ACT_ALLOW",
 			"args": null
 		},
