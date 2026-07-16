@@ -14,6 +14,12 @@ RUN apk upgrade --no-cache --available \
   socat \
   s6-overlay
 
+# font-wqy-zenhei's 44-wqy-zenhei.conf aliases the generic families to
+# WenQuanYi ahead of local.conf, so latin text would render with WenQuanYi
+# glyphs instead of the Noto fonts preferred below. Dropping it leaves CJK
+# fallback intact (coverage-based); 91-wqy-zenhei.conf (render settings)
+# stays.
+RUN rm /etc/fonts/conf.d/44-wqy-zenhei.conf
 COPY fonts.conf /etc/fonts/local.conf
 RUN fc-cache -f -v
 
