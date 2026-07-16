@@ -1,8 +1,12 @@
 FROM alpine:3.24
 
+# chromium-swiftshader provides the vk_swiftshader Vulkan ICD: since
+# Chromium 150, ANGLE's SwiftShader backend initializes via Vulkan and the
+# GPU process crash-loops without it (issue #21).
 RUN apk upgrade --no-cache --available \
   && apk add --no-cache \
   chromium \
+  chromium-swiftshader \
   ttf-freefont \
   font-noto \
   font-noto-emoji \
