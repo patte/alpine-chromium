@@ -118,13 +118,13 @@ echo "✅ Target URL responded with expected content"
 
 echo "Checking that chromium renders a page to a screenshot..."
 shot_log="$(mktemp)"
-if ! docker exec --user chrome "$CONTAINER_NAME" chromium-browser \
+if ! timeout 60 docker exec --user chrome "$CONTAINER_NAME" chromium-browser \
   --headless \
   --user-data-dir=/tmp/test-profile \
   --screenshot=/tmp/test-shot.png \
   --window-size=800,600 \
   "$RENDER_PAGE" >"$shot_log" 2>&1; then
-  echo "❌ Screenshot run failed:" >&2
+  echo "❌ Screenshot run failed or timed out:" >&2
   tail -20 "$shot_log" >&2
   exit 1
 fi
